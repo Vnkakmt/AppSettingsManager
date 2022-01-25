@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,11 +16,13 @@ namespace AppSettingsManager.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
         private TwilioSettings _twilioSettings;
+        private readonly IOptions<TwilioSettings> _twilioOptions;
 
-        public HomeController(ILogger<HomeController> logger, IConfiguration config)
+        public HomeController(ILogger<HomeController> logger, IConfiguration config, IOptions<TwilioSettings> twilioOptions)
         {
             _logger = logger;
             _config = config;
+            _twilioOptions = twilioOptions;
             _twilioSettings = new TwilioSettings();
             config.GetSection("Twilio").Bind(_twilioSettings);
         }
@@ -28,10 +31,15 @@ namespace AppSettingsManager.Controllers
         {
             ViewBag.SendGridKey = _config.GetValue<string>("SendGridKey");
             //ViewBag.TwilioAuthToken = _config.GetValue<string>("Twilio:AuthToken");
-            ViewBag.TwilioAuthToken = _config.GetSection("Twilio").GetValue<string>("AuthToken");
-            ViewBag.TwilioAuthSid = _config.GetValue<string>("Twilio:AccountSid");
+            //ViewBag.TwilioAuthToken = _config.GetSection("Twilio").GetValue<string>("AuthToken");
+            //ViewBag.TwilioAuthSid = _config.GetValue<string>("Twilio:AccountSid");
+            //
+            //ViewBag.TwilioPhoneNumber = _twilioSettings.PhoneNumber;
 
-            ViewBag.TwilioPhoneNumber = _twilioSettings.PhoneNumber;
+            ViewBag.TwilioAuthToken = _twilioOptions.Value.AuthToken;
+            ViewBag.TwilioAuthSid = _twilioOptions.Value.AccountSid;
+            ViewBag.TwilioPhoneNumber = _twilioOptions.Value.AuthToken;
+
 
             //ViewBag.ThirdLevelsetting = _config.GetValue<string>("FirstLevelSetting:SecondLevelSetting:BottomLevelSetting");
             //ViewBag.ThirdLevelsetting = _config.GetSection("FirstLevelSetting").GetValue<string>("SecondLevelSetting:BottomLevelSetting");
