@@ -14,11 +14,14 @@ namespace AppSettingsManager.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _config;
+        private TwilioSettings _twilioSettings;
 
         public HomeController(ILogger<HomeController> logger, IConfiguration config)
         {
             _logger = logger;
             _config = config;
+            _twilioSettings = new TwilioSettings();
+            config.GetSection("Twilio").Bind(_twilioSettings);
         }
 
         public IActionResult Index()
@@ -27,6 +30,8 @@ namespace AppSettingsManager.Controllers
             //ViewBag.TwilioAuthToken = _config.GetValue<string>("Twilio:AuthToken");
             ViewBag.TwilioAuthToken = _config.GetSection("Twilio").GetValue<string>("AuthToken");
             ViewBag.TwilioAuthSid = _config.GetValue<string>("Twilio:AccountSid");
+
+            ViewBag.TwilioPhoneNumber = _twilioSettings.PhoneNumber;
 
             //ViewBag.ThirdLevelsetting = _config.GetValue<string>("FirstLevelSetting:SecondLevelSetting:BottomLevelSetting");
             //ViewBag.ThirdLevelsetting = _config.GetSection("FirstLevelSetting").GetValue<string>("SecondLevelSetting:BottomLevelSetting");
