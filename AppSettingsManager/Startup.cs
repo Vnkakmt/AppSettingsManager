@@ -26,6 +26,7 @@ namespace AppSettingsManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddConfiguration<TwilioSettings>(Configuration, "Twilio");
+            services.Configure<SocialLoginsettings>(Configuration.GetSection("SocialLoginsettings"));
             services.Configure<TwilioSettings>(Configuration.GetSection("Twilio"));
             services.AddControllersWithViews();
         }
