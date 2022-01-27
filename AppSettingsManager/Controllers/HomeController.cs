@@ -48,6 +48,7 @@ namespace AppSettingsManager.Controllers
             ViewBag.TwilioAuthToken = _twilioSettings.AuthToken;
             ViewBag.TwilioAuthSid = _twilioSettings.AccountSid;
             ViewBag.TwilioPhoneNumber = _twilioSettings.AuthToken;
+            ViewBag.ConnectionString = _config.GetConnectionString("AppsettingsManagerDb");
 
 
 
